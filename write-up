@@ -1,0 +1,151 @@
+- Dev 1 trang web có chức năng cơ bản là đăng ký, đăng nhập và hiển thị thông tin tài khoản (tên, giới tính, email, địa chỉ, sdt)
+- Phần client thì ko cần quan tâm lắm (Ko cần đẹp)
+- Phần server thì chọn ngôn ngữ PHP và database MySQL
+DEADLINE: 23h 25/5
+
+### 🎯 Mục tiêu
+
+Xây dựng một trang web đơn giản với ba chức năng:
+
+1. Đăng ký người dùng
+2. Đăng nhập người dùng
+3. Hiển thị thông tin cá nhân sau khi đăng nhập
+
+### 🔧 Công nghệ sử dụng
+
+- **Ngôn ngữ backend**: PHP
+- **Cơ sở dữ liệu**: MySQL
+- **Giao diện frontend**: HTML, CSS đơn giản
+- **Session**: Quản lý trạng thái đăng nhập
+
+### 📁 Cấu trúc thư mục
+
+| Tên file | Mục đích |
+| --- | --- |
+| `config.php` | Kết nối tới cơ sở dữ liệu |
+| `functions.php` | Chứa hàm dùng chung (ví dụ: kiểm tra đăng nhập) |
+| `index.php` | Trang chủ đơn giản hoặc chuyển hướng người dùng |
+| `login.php` | Giao diện và xử lý đăng nhập |
+| `logout.php` | Hủy session, đăng xuất người dùng |
+| `register.php` | Giao diện và xử lý đăng ký người dùng mới |
+| `profile.php` | Hiển thị thông tin tài khoản sau khi người dùng đăng nhập |
+
+### 🗃️ Thiết lập cơ sở dữ liệu
+
+File `db.sql` dùng để tạo database:
+
+```sql
+sql
+CopyEdit
+CREATE DATABASE web_auth;
+
+USE web_auth;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    gender VARCHAR(10),
+    email VARCHAR(100) UNIQUE,
+    address VARCHAR(255),
+    phone VARCHAR(20),
+    password VARCHAR(255)
+);
+
+```
+
+### 🔑 Quản lý kết nối DB – `config.php`
+
+```php
+php
+<?php
+$host = 'localhost';
+$db = 'auth_demo';
+$user = 'root';
+$pass = '';
+
+$conn = new mysqli( $host, $user, $pass, $db);
+
+if (!$conn) {
+    die("Connection failed: " . $conn->connect_error);
+}
+session_start();
+?>
+
+```
+
+### 🔄 Đăng ký tài khoản – `register.php`
+
+- Người dùng nhập thông tin
+- Mật khẩu được mã hóa
+- Dữ liệu lưu vào bảng `users`
+
+📝 Lưu ý:
+
+- Kiểm tra email trùng
+- Hiển thị thông báo thành công / lỗi
+
+### 🔓 Đăng nhập – `login.php`
+
+- Người dùng nhập email + mật khẩu
+- Dùng `password_verify()` để so khớp
+- Nếu đúng, tạo `$_SESSION['user_id']` và chuyển sang `profile.php`
+
+### 🧠 Hàm dùng chung – `functions.php`
+
+Ví dụ:
+
+```php
+php
+CopyEdit
+function redirect_if_not_logged_in() {
+    session_start();
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: login.php");
+        exit();
+    }
+}
+
+```
+
+---
+
+### 👤 Trang cá nhân – `profile.php`
+
+- Hiển thị thông tin người dùng từ DB
+- Chỉ truy cập nếu đã đăng nhập
+
+---
+
+### 🔚 Đăng xuất – `logout.php`
+
+```php
+<?php
+session_start();
+session_destroy();
+header("Location: login.php");
+exit();
+?>
+
+```
+
+---
+
+### 🚀 Chạy thử dự án
+
+1. Mở XAMPP (bật Apache & MySQL)
+2. Tạo DB bằng `db.sql`
+3. Copy project vào thư mục `htdocs` (ví dụ: `htdocs/user-auth`)
+4. Truy cập trình duyệt:
+    
+    👉 `http://localhost/user-auth/register.php`
+    
+
+---
+
+### ✅ Kết quả đạt được
+
+1. Học được cách sử dụng CSDL để quản lý 1 trang web
+2. Biết cách dev 1 web
+3. Học được về PHP, HTML, và CSS
+4. Dùng github, notion:)) ya sure.
+5. Dùng AI khôn hơn.
